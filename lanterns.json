@@ -1,0 +1,34 @@
+[{
+  "id": "0b85",
+  "hostName": "esp32-66F2C0",
+  "macAddress": "F0:08:D1:66:F2:C0",
+  "ipAddress": "192.168.1.10",
+  "startUniverse": 0,
+  "status": true,
+  "__v": 0,
+  "pulse": 60,
+  "group": 1,
+  "rgb": "240, 12, 22, 255"
+},{
+  "id": "0a99",
+  "hostName": "esp32-D2AE70",
+  "macAddress": "BC:DD:C2:D2:AE:70",
+  "ipAddress": "192.168.1.14",
+  "startUniverse": 1,
+  "status": false,
+  "__v": 0,
+  "pulse": 0,
+  "group": 1,
+  "rgb": "0, 0, 0, 0"
+},{
+  "id": "5a8e",
+  "hostName": "esp32-66E53C",
+  "macAddress": "F0:08:D1:66:E5:3C",
+  "ipAddress": "192.168.1.11",
+  "startUniverse": 3,
+  "status": true,
+  "__v": 0,
+  "pulse": 89,
+  "group": 1,
+  "rgb": "255, 76, 0, 255"
+}]
