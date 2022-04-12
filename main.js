@@ -1,6 +1,7 @@
 // array of lanterns. Eventually, this will be data coming from the API
+/*
 const lanterns = [{
-  "id": "0b85",
+  "id": "c52e",
   "hostName": "esp32-66F2C0",
   "macAddress": "F0:08:D1:66:F2:C0",
   "ipAddress": "192.168.1.10",
@@ -91,6 +92,117 @@ const zones = [{
 "__v": 0
 }]
 
+*/
+
+let lanterns = [];
+
+(async function() {
+  try {
+    objs = await axios.get('http://192.168.1.209:8081/api/lanterns')
+    lanterns = objs.data;
+    await createLanternObjs();
+    animate();
+  } catch (error) {
+    
+    lanterns = [{
+      "id": "c52e",
+      "hostName": "esp32-66F2C0",
+      "macAddress": "F0:08:D1:66:F2:C0",
+      "ipAddress": "192.168.1.10",
+      "startUniverse": 0,
+      "status": true,
+      "__v": 0,
+      "pulse": 60,
+      "group": 1,
+      "rgb": "255, 0, 115"
+    }, {
+      "id": "0a99",
+      "hostName": "esp32-D2AE70",
+      "macAddress": "BC:DD:C2:D2:AE:70",
+      "ipAddress": "192.168.1.14",
+      "startUniverse": 1,
+      "status": false,
+      "__v": 0,
+      "pulse": 0,
+      "group": 1,
+      "rgb": "252, 186, 3"
+    }, {
+      "id": "5a8e",
+      "hostName": "esp32-66E53C",
+      "macAddress": "F0:08:D1:66:E5:3C",
+      "ipAddress": "192.168.1.11",
+      "startUniverse": 3,
+      "status": true,
+      "__v": 0,
+      "pulse": 89,
+      "group": 1,
+      "rgb": "236, 253, 10"
+    }]
+    
+    const zones = [{
+    "_id": "624237da4891ba5fef51ec2b",
+    "id": "6f50",
+    "name": "ab01",
+    "x": "0",
+    "y": "7",
+    "z": "0",
+    "size": "5",
+    "group": "nv",
+    "param1": 0,
+    "param2": 0,
+    "param3": "0",
+    "__v": 0
+    },
+    {
+    "_id": "624237e34891ba5fef51ee5b",
+    "id": "ebf4",
+    "name": "ab02",
+    "x": "0.3",
+    "y": "12.5",
+    "z": "0",
+    "size": "5",
+    "group": "nv",
+    "param1": 0,
+    "param2": 0,
+    "param3": "0",
+    "__v": 0
+    },
+    {
+    "_id": "624237eb4891ba5fef51f05f",
+    "id": "2654",
+    "name": "ab03",
+    "x": "2.220118",
+    "y": "31.618479",
+    "z": "0",
+    "size": "5",
+    "group": "nv",
+    "param1": 0,
+    "param2": 0,
+    "param3": "0",
+    "__v": 0
+    },
+    {
+    "_id": "624238014891ba5fef51f5ab",
+    "id": "c6a9",
+    "name": "ab04",
+    "x": "0.9",
+    "y": "46",
+    "z": "0",
+    "size": "5",
+    "group": "nv",
+    "param1": 0,
+    "param2": 0,
+    "param3": "0",
+    "__v": 0
+    }]
+
+    return
+  }
+})();
+
+
+
+
 const width = window.innerWidth;
 const height = window.innerHeight;
 
@@ -99,6 +211,11 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 300);
 camera.position.set(0, 0, 25);
 camera.lookAt(new THREE.Vector3(0,0,0));
+
+
+
+
+
 
 // renderer
 const renderer = new THREE.WebGLRenderer();
@@ -130,42 +247,69 @@ const geometry = new THREE.CircleGeometry(0.2, 32, 32);
 const zoneGeometry = new THREE.CircleGeometry(30, 32);
 const ringGeometry = new THREE.RingGeometry(0.2, 0.25, 32);
 
+
+
+
 // objets des lanternes de three.js 
 let lanternObj = []
 
-for (let i = 0; i < lanterns.length; i++){
-  let lantern = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ color: new THREE.Color(`rgb(${lanterns[i].rgb})`)})); //geometry, material
-  // give each lantern a random pos
-  lantern.position.x = randomIntFromInterval(-12, 12);
-  lantern.position.y = randomIntFromInterval(-5, 5);
-  lantern.position.z = 0;
+// create lantern objects and add them to the scene
+async function createLanternObjs(){
 
-  // give the lantern a name which is its id
-  lantern.name = lanterns[i].id;
+  return new Promise(async (resolve, reject) => {
 
-  // give the lantern a userData of startUniverse
-  lantern.userData.startUniverse = lanterns[i].startUniverse;
+    for (let i = 0; i < lanterns.length; i++){
 
-  // give the lantern a userData of pulse
-  lantern.userData.pulse = lanterns[i].pulse;
+      console.log(lanterns[i]);
 
-  // give the lantern a userData of color
-  lantern.userData.color = lanterns[i].rgb;
+      if (lanterns[i].status=== true){
+      
 
-
-  // create a ring geometry on top of the lantern
-  let ring = new THREE.Mesh(ringGeometry, new THREE.MeshBasicMaterial({ color: 0xffffff }));
-  ring.position.x = lantern.position.x;
-  ring.position.y = lantern.position.y;
-  ring.position.z = lantern.position.z -0.01;
+      
+      let lantern = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ color: new THREE.Color(`rgb(${lanterns[i].rgb})`)})); //geometry, material
+      
+    
+      // give each lantern a random pos
+     
+      lantern.position.x = 0;
+      lantern.position.y = 0;
+      lantern.position.z = 0;
+    
+      // give the lantern a name which is its id
+      lantern.name = lanterns[i].id;
+    
+      // give the lantern a userData of startUniverse
+      lantern.userData.startUniverse = lanterns[i].startUniverse;
+    
+      // give the lantern a userData of pulse
+      lantern.userData.pulse = lanterns[i].pulse;
+    
+      // give the lantern a userData of color
+      lantern.userData.color = lanterns[i].rgb;
+    
+    
+      // create a ring geometry on top of the lantern
+      let ring = new THREE.Mesh(ringGeometry, new THREE.MeshBasicMaterial({ color: 0xffffff }));
+      ring.position.x = lantern.position.x;
+      ring.position.y = lantern.position.y;
+      ring.position.z = lantern.position.z -0.01;
+      
+      
+      // now add them to the scene
+      scene.add(lantern);
+      scene.add(ring);
+      // and add the lanterns to the lanternObj array to give it an identity
+      lanternObj.push(lantern);
+    }
   
-  
-  // now add them to the scene
-  scene.add(lantern);
-  scene.add(ring);
-  // and add the lanterns to the lanternObj array to give it an identity
-  lanternObj.push(lantern);
+  }
+   resolve();
+
+  })
 }
+
+
+
 
 
 
@@ -269,7 +413,15 @@ window.addEventListener('mousemove', (event) => {
 
 
 
+
+
 function animate() {
+
+
+  // loop through lanterns and run the updateLantern function for each
+  for (let index = 0; index < lanternObj.length; index++) {
+    updateLantern(lanternObj[index]);
+  }
 
   // Raycaster
   raycaster.setFromCamera(mouse, camera);
@@ -305,9 +457,36 @@ function animate() {
   
 
 }
-animate();
+//animate();
 
 
+// assign positions to the lanterns (the elm is each lantern in the array)
+async function updateLantern(elm) {
+  //console.log(elm);
+
+  try {
+    const response = await axios.get(`http://192.168.1.209:8081/api/lanterns/positions/${elm.name}`)
+    if (response.data === "") {
+      return
+    }
+    
+    let positionParse = JSON.parse(response.data.position)
+    pos = positionParse.position
+    elm.position.x = pos.x * 2
+    elm.position.y = pos.y * 2
+    elm.position.z = pos.z
+
+
+    // give the lantern a color **not sure if this works, test by changing the lantern color ~April 11th
+    elm.material.color.set(response.data.color);
+
+
+    
+  } catch (error) {
+
+    return
+  }
+}
 
 // From https://github.com/anvaka/three.map.control, used for panning
 function getCurrentScale() {
