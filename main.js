@@ -200,6 +200,48 @@ let lanterns = [];
   }
 })();
 
+// create areas array
+let areas = [];
+
+(async function() {
+  try {
+    objs = await axios.get('http://192.168.1.209:8081/api/areas')
+    areas = objs.data;
+    await createAreaObjs();
+    animate();
+  } catch (error) {
+    console.log(error);
+    return
+  }
+})();
+
+
+// doesnt work because of front end / back end incompatibility
+/*
+// initialize client variable
+let client;
+
+// connect to mqtt client
+client = mqtt.connect('mqtt://192.168.1.212:1883');
+client.on('connect', function () { 
+  console.log(`connected to MQTT: mqtt://${host}:${port}`);
+});
+
+// subscribe to area topic
+client.subscribe('area');
+
+// parse area message
+client.on('message', function (topic, message) {
+  areas = JSON.parse(message);
+  console.log(areas);
+  createAreaObjs();
+});
+*/
+
+
+
+
+
 
 
 
@@ -260,7 +302,7 @@ async function createLanternObjs(){
 
     for (let i = 0; i < lanterns.length; i++){
 
-      console.log(lanterns[i]);
+      //console.log(lanterns[i]);
 
       if (lanterns[i].status=== true){
       
@@ -287,19 +329,20 @@ async function createLanternObjs(){
       // give the lantern a userData of color
       lantern.userData.color = lanterns[i].rgb;
     
-    
+      /*
       // create a ring geometry on top of the lantern
       let ring = new THREE.Mesh(ringGeometry, new THREE.MeshBasicMaterial({ color: 0xffffff }));
       ring.position.x = lantern.position.x;
       ring.position.y = lantern.position.y;
       ring.position.z = lantern.position.z -0.01;
-      
+      */
       
       // now add them to the scene
       scene.add(lantern);
-      scene.add(ring);
+      //scene.add(ring);
       // and add the lanterns to the lanternObj array to give it an identity
       lanternObj.push(lantern);
+      
     }
   
   }
@@ -307,6 +350,51 @@ async function createLanternObjs(){
 
   })
 }
+
+
+let areaObj = [];
+
+// create lantern objects and add them to the scene
+async function createAreaObjs(){
+
+  return new Promise(async (resolve, reject) => {
+
+    for (let i = 0; i < areas.length; i++){
+
+      console.log(areas[i]);
+
+      
+
+      
+      let area = new THREE.Mesh(ringGeometry, new THREE.MeshBasicMaterial({ color: 0xffffff }));
+      
+
+      // give the area a name which is the id of the area
+      area.name = areas[i].id;
+
+      // give the area a position based on the x, y, and z values
+      area.position.x = areas[i].x;
+      area.position.y = areas[i].y;
+      area.position.z = areas[i].z;
+
+      // give the area a size based on the size value
+
+      area.scale.x = areas[i].size;
+      area.scale.y = areas[i].size;
+      area.scale.z = areas[i].size;
+
+      // add the area to the scene
+      scene.add(area);
+
+      // add the area to the areaObj array
+      areaObj.push(area);
+  
+  }
+   resolve();
+
+  })
+}
+
 
 
 
@@ -479,14 +567,14 @@ async function updateLantern(elm) {
 
     // give the lantern a color **not sure if this works, test by changing the lantern color ~April 11th
     elm.material.color.set(response.data.color);
-
-
     
   } catch (error) {
 
     return
   }
 }
+
+
 
 // From https://github.com/anvaka/three.map.control, used for panning
 function getCurrentScale() {
